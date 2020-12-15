@@ -93,7 +93,7 @@
     <com.haibin.calendarview.CalendarLayout
         android:id="@+id/calendarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#fff"
         android:orientation="vertical"
         app:calendar_content_view_id="@+id/recyclerView">
@@ -111,7 +111,6 @@
             app:month_view_show_mode="mode_only_current"
             app:other_month_text_color="#e1e1e1"
             app:scheme_lunar_text_color="#ffffff"
-            app:scheme_text="假"
             app:scheme_text_color="#fff"
             app:scheme_theme_color="#128c4b"
             app:selected_lunar_text_color="#fff"
@@ -128,5 +127,18 @@
 
     </com.haibin.calendarview.CalendarLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/login"
+            style="@style/SuperButton.Blue.Icon"
+            android:layout_marginStart="20dp"
+            android:drawableStart="@drawable/ic_camera"
+            android:paddingStart="10dp"
+            android:text="打卡签到" />
+    </LinearLayout>
 
 </LinearLayout>

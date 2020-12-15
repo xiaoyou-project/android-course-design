@@ -1,4 +1,4 @@
-package com.xiaoyou.face;
+package com.xiaoyou.face.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.xiaoyou.face.R;
 import com.xiaoyou.face.databinding.ActivityMainBinding;
 import com.xiaoyou.face.fragment.IndexFragment;
 import com.xiaoyou.face.fragment.MeFragment;
