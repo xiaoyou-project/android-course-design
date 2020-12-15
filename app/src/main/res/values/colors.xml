@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+<!--     引入element的颜色-->
+    <color name="success">#67C23A</color>
+    <color name="waring">#E6A23C</color>
+    <color name="danger">#F56C6C</color>
+    <color name="info">#909399</color>
+    <color name="primary">#409EFF</color>
+    <color name="primary_dark">#53A8FF</color>
+    <!-- tab的背景颜色   -->
+    <color name="tab_background">#E8EAED</color>
 </resources>

@@ -26,18 +26,32 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    // 开启视图绑定功能
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
 
-    // 使用XUL库
-    implementation 'com.github.xuexiangjys:XUI:1.0.9-support'
-    //
+    // 使用XUL库 https://gitee.com/xuexiangjys/XUI
+    implementation 'com.github.xuexiangjys:XUI:1.1.5'
+
+    // 黄油刀 https://github.com/JakeWharton/butterknife （这个库已经不推荐使用了）
+    //    implementation 'com.jakewharton:butterknife:10.2.3'
+    //    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+
+    // 底部导航栏
+    implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
+
+    // 多彩日历组件
+    implementation 'com.haibin:calendarview:3.7.0'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
