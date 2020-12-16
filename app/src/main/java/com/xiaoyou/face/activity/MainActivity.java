@@ -22,6 +22,7 @@ import com.xiaoyou.face.databinding.ActivityMainBinding;
 import com.xiaoyou.face.fragment.IndexFragment;
 import com.xiaoyou.face.fragment.MeFragment;
 import com.xiaoyou.face.fragment.ToolFragment;
+import com.xiaoyou.face.utils.ConfigUtil;
 import com.xuexiang.xui.XUI;
 
 import io.reactivex.Observable;
@@ -31,6 +32,9 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.arcsoft.face.enums.DetectFaceOrientPriority.ASF_OP_270_ONLY;
+import static com.arcsoft.face.enums.DetectFaceOrientPriority.ASF_OP_ALL_OUT;
 
 
 /**
@@ -73,6 +77,8 @@ public class MainActivity extends BaseActivity {
         initTab();
         // 激活引擎
         activeEngine(getWindow().getDecorView());
+        //选择检测角度 默认270度
+        ConfigUtil.setFtOrient(getApplicationContext(), ASF_OP_ALL_OUT);
     }
 
     /**

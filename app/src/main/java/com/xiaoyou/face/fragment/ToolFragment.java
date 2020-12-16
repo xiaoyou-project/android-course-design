@@ -1,6 +1,5 @@
 package com.xiaoyou.face.fragment;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -75,14 +74,13 @@ public class ToolFragment extends Fragment {
         binding.toolList.setOnItemClickListener((parent, view, position, id) -> {
             switch (position){
                 case 0:
-                    faceInput();
+                    startActivity(new Intent(getContext(), RegisterAndRecognizeActivity.class));
                     break;
                 case 1:
                     startActivity(new Intent(getContext(), StatisticsActivity.class));
                     break;
                 case 2:
-//                    startActivity(new Intent(getContext(), SearchActivity.class));
-                    startActivity(new Intent(getContext(), RegisterAndRecognizeActivity.class));
+                    startActivity(new Intent(getContext(), SearchActivity.class));
                     break;
                 default:
                     break;
@@ -90,28 +88,6 @@ public class ToolFragment extends Fragment {
         });
     }
 
-    /**
-     * 人脸录入
-     */
-    private void faceInput(){
-        //  显示录入弹窗
-        Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getContext()))
-                .customView(R.layout.dialog_input, true)
-                .title("人脸录入")
-                .positiveText(R.string.face_input)
-                .negativeText(R.string.face_cancel)
-                .onPositive((dialog1, which) -> {
-                    // 点击录入的时的点击事件
-                })
-                .show();
-        // 点击人脸录入的点击事件
-        faceInput = dialog.findViewById(R.id.input);
-        faceInput.setOnClickListener(v->{
-            EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())//参数说明：上下文，是否显示相机按钮，[配置Glide为图片加载引擎](https://github.com/HuanTanSheng/EasyPhotos/wiki/12-%E9%85%8D%E7%BD%AEImageEngine%EF%BC%8C%E6%94%AF%E6%8C%81%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%BA%93)
-                    .setFileProviderAuthority("com.xiaoyou.face.fileprovider")//参数说明：见下方`FileProvider的配置`
-                    .start(REQUEST_CODE);
-        });
-    }
 
     /**
      * 拍照或者选择照片的回调事件

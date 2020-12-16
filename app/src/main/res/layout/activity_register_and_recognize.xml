@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,37 +16,34 @@
             android:id="@+id/single_camera_face_rect_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <com.xuexiang.xui.widget.alpha.XUIAlphaImageView
+            android:id="@+id/iv_face"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:onClick="switchCamera"
+            app:srcCompat="@drawable/ic_switch_camera" />
+
+
+        <com.xuexiang.xui.widget.alpha.XUIAlphaImageView
+            android:id="@+id/iv_take_photo"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:onClick="register"
+            android:layout_marginBottom="30dp"
+            app:srcCompat="@drawable/ic_add_reaction" />
+
     </FrameLayout>
 
-    <Switch
-        android:id="@+id/single_camera_switch_liveness_detect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/common_bottom_margin"
-        android:text="@string/liveness_detect" />
 
-    <LinearLayout
-        android:layout_margin="@dimen/common_bottom_margin"
-        android:layout_gravity="bottom|end"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="register"
-            android:text="@string/register" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="switchCamera"
-            android:text="@string/switch_camera" />
-    </LinearLayout>
-
+    <!-- 这里显示用户图像 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/single_camera_recycler_view_person"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </FrameLayout>
