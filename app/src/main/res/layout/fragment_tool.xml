@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ToolFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <GridView
+        android:id="@+id/tool_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="工具" />
+        android:numColumns="3"
+        />
 
 </FrameLayout>

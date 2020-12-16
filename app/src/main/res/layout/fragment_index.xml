@@ -139,6 +139,14 @@
             android:drawableStart="@drawable/ic_camera"
             android:paddingStart="10dp"
             android:text="打卡签到" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/test"
+            style="@style/SuperButton.Blue.Icon"
+            android:layout_marginStart="20dp"
+            android:drawableStart="@drawable/ic_camera"
+            android:paddingStart="10dp"
+            android:text="测试" />
     </LinearLayout>
 
 </LinearLayout>

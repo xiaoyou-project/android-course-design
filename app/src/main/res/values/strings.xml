@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">face</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- 人脸录入  -->
+    <string name="face_input">录入</string>
+    <string name="face_cancel">取消</string>
+    <string name="face_number">学号</string>
+    <string name="face_name">姓名</string>
+    <string name="face_upload">人脸录入</string>
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/face_number"
+        app:met_clearButton="true"
+        app:met_iconLeft="@drawable/ic_credit"
+        app:met_iconPadding="10dp"
+        app:met_maxCharacters="5" />
+    <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/face_name"
+        app:met_clearButton="true"
+        app:met_iconLeft="@drawable/ic_credit"
+        app:met_iconPadding="5dp"
+        app:met_maxCharacters="5" />
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:layout_gravity="center"
+        android:id="@+id/input"
+        style="@style/SuperButton.Blue.Icon"
+        android:drawableStart="@drawable/ic_faces_white"
+        android:paddingStart="10dp"
+        android:text="@string/face_upload" />
+</LinearLayout>

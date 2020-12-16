@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="2dp"
+    android:layout_width="60dp"
+    android:layout_height="60dp">
+    <LinearLayout
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--   图标-->
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/img"
+            android:layout_gravity="center" />
+        <!--    文字显示-->
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/dec"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</LinearLayout>

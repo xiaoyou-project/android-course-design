@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.wonderkiln.camerakit.CameraKitError;
@@ -17,6 +18,8 @@ import com.xiaoyou.face.utils.FaceRead;
 import com.xiaoyou.face.utils.ToastUtils;
 import com.xiaoyou.face.utils.TypeChange;
 import com.xuexiang.xui.XUI;
+
+import java.io.InputStream;
 
 /**
  * 简单拍照库
@@ -67,8 +70,10 @@ public class CameraActivity extends AppCompatActivity {
             public void onImage(CameraKitImage cameraKitImage) {
                 Bitmap bitmap = cameraKitImage.getBitmap();
                 try {
-                    String data=FaceRead.checkFace(TypeChange.bitmap2InputStream(bitmap));
-                    ToastUtils.success(data);
+//                    InputStream inputStream = TypeChange.bitmap2InputStream(bitmap);
+//                    Log.e("xiaoyou",""+inputStream.available());
+//                    String data=FaceRead.checkFace(TypeChange.bitmap2InputStream(bitmap));
+//                    ToastUtils.success(data);
                 }catch (Exception ignored){
 
                 }

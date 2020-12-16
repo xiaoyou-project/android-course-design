@@ -1,5 +1,7 @@
 package com.xiaoyou.face;
 
+import com.xiaoyou.face.utils.FaceRead;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -17,6 +19,6 @@ public class ExampleUnitTest {
 
     @Test
     public void faceTest() throws Exception {
-//        FaceRead.checkFace();
+        FaceRead.checkFace("D:\\tmp\\2.jpg");
     }
 }
