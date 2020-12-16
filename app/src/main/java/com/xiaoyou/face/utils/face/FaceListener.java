@@ -1,6 +1,7 @@
 package com.xiaoyou.face.utils.face;
 
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.LivenessInfo;

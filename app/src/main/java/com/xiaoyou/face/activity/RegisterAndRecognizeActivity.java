@@ -15,6 +15,14 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.xiaoyou.face.R;
+import com.xiaoyou.face.faceserver.CompareResult;
 import com.xiaoyou.face.faceserver.FaceServer;
 import com.xiaoyou.face.model.DrawInfo;
 import com.xiaoyou.face.model.FacePreviewInfo;

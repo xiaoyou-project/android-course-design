@@ -1,19 +1,36 @@
 package com.xiaoyou.face.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.arcsoft.face.ActiveFileInfo;
+import com.arcsoft.face.ErrorInfo;
+import com.arcsoft.face.FaceEngine;
+import com.arcsoft.face.enums.RuntimeABI;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.xiaoyou.face.R;
+import com.xiaoyou.face.common.Constants;
 import com.xiaoyou.face.databinding.ActivityMainBinding;
 import com.xiaoyou.face.fragment.IndexFragment;
 import com.xiaoyou.face.fragment.MeFragment;
 import com.xiaoyou.face.fragment.ToolFragment;
 import com.xuexiang.xui.XUI;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -21,8 +38,21 @@ import com.xuexiang.xui.XUI;
  * @author 小游
  * @date 2020/12/14
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
+    private static final String TAG = "ChooseFunctionActivity";
+    private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
+    // 在线激活所需的权限
+    private static final String[] NEEDED_PERMISSIONS = new String[]{Manifest.permission.READ_PHONE_STATE};
+    boolean libraryExists = true;
+    // Demo 所需的动态库文件
+    private static final String[] LIBRARIES = new String[]{
+            // 人脸相关
+            "libarcsoft_face_engine.so",
+            "libarcsoft_face.so",
+            // 图像库相关
+            "libarcsoft_image_util.so",
+    };
 
     private ActivityMainBinding binding;
 
@@ -41,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, indexFragment).commit();
         // tab初始化
         initTab();
+        // 激活引擎
+        activeEngine(getWindow().getDecorView());
     }
 
     /**
@@ -82,6 +114,86 @@ public class MainActivity extends AppCompatActivity {
            public void onTabReselected(int position) {
            }
        });
+    }
+
+
+    /**
+     * 激活引擎
+     *
+     * @param view
+     */
+    @SuppressLint("CheckResult")
+    public void activeEngine(final View view) {
+        if (!libraryExists) {
+            showToast(getString(R.string.library_not_found));
+            return;
+        }
+        if (!checkPermissions(NEEDED_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, NEEDED_PERMISSIONS, ACTION_REQUEST_PERMISSIONS);
+            return;
+        }
+        if (view != null) {
+            view.setClickable(false);
+        }
+        Observable<Integer> integerObservable = Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) {
+                RuntimeABI runtimeABI = FaceEngine.getRuntimeABI();
+                Log.i(TAG, "subscribe: getRuntimeABI() " + runtimeABI);
+
+                long start = System.currentTimeMillis();
+                int activeCode = FaceEngine.activeOnline(MainActivity.this, Constants.APP_ID, Constants.SDK_KEY);
+                Log.i(TAG, "subscribe cost: " + (System.currentTimeMillis() - start));
+                emitter.onNext(activeCode);
+            }
+        });
+        integerObservable.subscribeOn(Schedulers.io());
+        integerObservable.observeOn(AndroidSchedulers.mainThread());
+        integerObservable.subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer activeCode) {
+                if (activeCode == ErrorInfo.MOK) {
+                    showToast(getString(R.string.active_success));
+                } else if (activeCode == ErrorInfo.MERR_ASF_ALREADY_ACTIVATED) {
+                    showToast(getString(R.string.already_activated));
+                } else {
+                    showToast(getString(R.string.active_failed, activeCode));
+                }
+
+                if (view != null) {
+                    view.setClickable(true);
+                }
+                ActiveFileInfo activeFileInfo = new ActiveFileInfo();
+                int res = FaceEngine.getActiveFileInfo(MainActivity.this, activeFileInfo);
+                if (res == ErrorInfo.MOK) {
+                    Log.i(TAG, activeFileInfo.toString());
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                showToast(e.getMessage());
+                if (view != null) {
+                    view.setClickable(true);
+                }
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+    }
+
+    @Override
+    void afterRequestPermission(int requestCode, boolean isAllGranted) {
 
     }
 }

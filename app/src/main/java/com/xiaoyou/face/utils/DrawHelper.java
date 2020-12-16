@@ -6,16 +6,16 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.hardware.Camera;
 
-import com.arcsoft.arcfacedemo.model.DrawInfo;
-import com.arcsoft.arcfacedemo.widget.FaceRectView;
 import com.arcsoft.face.AgeInfo;
 import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
+import com.xiaoyou.face.model.DrawInfo;
+import com.xiaoyou.face.widget.FaceRectView;
 
 import java.util.List;
 
 /**
- * 绘制人脸框帮助类，用于在{@link com.arcsoft.arcfacedemo.widget.FaceRectView}上绘制矩形
+ * 绘制人脸框帮助类，用于在{@link com.xiaoyou.face.widget.FaceRectView}上绘制矩形
  */
 public class DrawHelper {
     private int previewWidth, previewHeight, canvasWidth, canvasHeight, cameraDisplayOrientation, cameraId;

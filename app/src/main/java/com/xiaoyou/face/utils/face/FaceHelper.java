@@ -3,13 +3,12 @@ package com.xiaoyou.face.utils.face;
 import android.hardware.Camera;
 import android.util.Log;
 
-import com.arcsoft.arcfacedemo.model.FacePreviewInfo;
-import com.arcsoft.arcfacedemo.util.TrackUtil;
 import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.LivenessInfo;
+import com.xiaoyou.face.model.FacePreviewInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +19,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static com.xiaoyou.face.utils.TrackUtil.keepMaxFace;
 
 /**
  * 人脸操作辅助类
@@ -215,7 +216,7 @@ public class FaceHelper {
                 /*
                  * 若需要多人脸搜索，删除此行代码
                  */
-                com.arcsoft.arcfacedemo.util.TrackUtil.keepMaxFace(faceInfoList);
+                keepMaxFace(faceInfoList);
                 refreshTrackId(faceInfoList);
             }
             facePreviewInfoList.clear();

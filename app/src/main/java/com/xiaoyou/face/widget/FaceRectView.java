@@ -3,12 +3,15 @@ package com.xiaoyou.face.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
+
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.arcsoft.arcfacedemo.model.DrawInfo;
-import com.arcsoft.arcfacedemo.util.DrawHelper;
+
+import androidx.annotation.Nullable;
+
+import com.xiaoyou.face.model.DrawInfo;
+import com.xiaoyou.face.utils.DrawHelper;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

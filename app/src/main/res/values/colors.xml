@@ -16,4 +16,8 @@
     <color name="primary_dark">#53A8FF</color>
     <!-- tab的背景颜色   -->
     <color name="tab_background">#E8EAED</color>
+
+
+    <color name="color_bg_notification">#80000000</color>
+    <color name="color_bg_name">#80000000</color>
 </resources>

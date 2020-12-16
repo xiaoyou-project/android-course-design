@@ -18,6 +18,7 @@ import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.xiaoyou.face.R;
 import com.xiaoyou.face.activity.CameraActivity;
+import com.xiaoyou.face.activity.RegisterAndRecognizeActivity;
 import com.xiaoyou.face.activity.SearchActivity;
 import com.xiaoyou.face.activity.StatisticsActivity;
 import com.xiaoyou.face.adapter.FunctionAdapter;
@@ -80,7 +81,8 @@ public class ToolFragment extends Fragment {
                     startActivity(new Intent(getContext(), StatisticsActivity.class));
                     break;
                 case 2:
-                    startActivity(new Intent(getContext(), SearchActivity.class));
+//                    startActivity(new Intent(getContext(), SearchActivity.class));
+                    startActivity(new Intent(getContext(), RegisterAndRecognizeActivity.class));
                     break;
                 default:
                     break;
