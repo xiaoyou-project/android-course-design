@@ -18,9 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.RegisterAndRecognizeActivity"></activity>
-        <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.StatisticsActivity" />
+        <activity android:name=".activity.RegisterAndRecognizeActivity" />
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>

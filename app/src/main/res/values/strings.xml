@@ -9,8 +9,8 @@
     <string name="face_name">姓名</string>
     <string name="face_upload">人脸录入</string>
 
-    <!-- 工具 -->
-    <string name="function_name">工具</string>
+    <!-- 统计 -->
+    <string name="function_name">考勤统计</string>
 
     <!--数据查询-->
     <string name="search_input">关键词</string>
@@ -66,7 +66,7 @@
     <string name="switch_camera">切换相机</string>
     <string name="switch_camera_failed">切换相机失败</string>
     <string name="recognize_failed_notice">未通过:%s</string>
-    <string name="recognize_success_notice">通过:%s</string>
+    <string name="recognize_success_notice">签到成功，用户id:%s</string>
     <string name="low_confidence_level">人脸置信度低</string>
     <string name="specific_engine_init_failed">%s 初始化失败，错误码为:%d</string>
     <string name="notice_change_detect_degree">相机已切换，若无法检测到人脸，需要在首页修改视频模式人脸检测角度</string>
@@ -96,6 +96,7 @@
     <string name="batch_process_path_is_not_dir">路径 \n%s\n 不是文件夹</string>
     <string name="batch_process_processing_please_wait">处理中，请稍等</string>
     <string name="batch_process_finished_info">处理完成！\n处理总数 =  %d \n成功数 = %d \n失败数 = %d \n处理失败的图片已保存在文件夹 \' %s \'</string>
+    <string name="function_me">数据统计</string>
 
 
 </resources>

@@ -42,27 +42,27 @@ public class FaceHelper {
     /**
      * 人脸追踪引擎
      */
-    private FaceEngine ftEngine;
+    private final FaceEngine ftEngine;
     /**
      * 特征提取引擎
      */
-    private FaceEngine frEngine;
+    private final FaceEngine frEngine;
     /**
      * 活体检测引擎
      */
-    private FaceEngine flEngine;
+    private final FaceEngine flEngine;
 
-    private Camera.Size previewSize;
+    private final Camera.Size previewSize;
 
     private List<FaceInfo> faceInfoList = new ArrayList<>();
     /**
      * 特征提取线程池
      */
-    private ExecutorService frExecutor;
+    private final ExecutorService frExecutor;
     /**
      * 活体检测线程池
      */
-    private ExecutorService flExecutor;
+    private final ExecutorService flExecutor;
     /**
      * 特征提取线程队列
      */
@@ -82,8 +82,8 @@ public class FaceHelper {
      */
     private int currentMaxFaceId = 0;
 
-    private List<Integer> currentTrackIdList = new ArrayList<>();
-    private List<FacePreviewInfo> facePreviewInfoList = new ArrayList<>();
+    private final List<Integer> currentTrackIdList = new ArrayList<>();
+    private final List<FacePreviewInfo> facePreviewInfoList = new ArrayList<>();
     /**
      * 用于存储人脸对应的姓名，KEY为trackId，VALUE为name
      */

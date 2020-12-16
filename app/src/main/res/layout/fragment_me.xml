@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.MeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- 顶部导航栏 -->
+    <LinearLayout
+        android:gravity="center"
+        android:background="@color/primary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="我的" />
+        android:layout_height="50dp">
+        <TextView
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/function_me"
+            />
+    </LinearLayout>
+    <!-- 搜索条件 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <!--下拉框-->
+        <com.xuexiang.xui.widget.spinner.materialspinner.MaterialSpinner
+            android:id="@+id/search_type"
+            android:height="25dp"
+            style="@style/Material.SpinnerStyle"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="?attr/xui_config_content_spacing_vertical"
+            app:ms_entries="@array/sort_mode_entry" />
+        <!-- 编辑框 -->
+        <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+            android:layout_marginStart="5dp"
+            android:id="@+id/edit_key"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:hint="@string/search_input"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="15" />
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:layout_gravity="center"
+            android:id="@+id/search"
+            android:layout_marginStart="5dp"
+            style="@style/SuperButton.Blue.Icon"
+            android:drawableStart="@drawable/ic_search_white"
+            android:paddingStart="10dp"
+            android:width="20dp"
+            android:text="@string/search_search" />
+    </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

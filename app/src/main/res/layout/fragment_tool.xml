@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.ToolFragment">
     <LinearLayout
         android:gravity="center"
@@ -17,13 +19,29 @@
             android:text="@string/function_name"
             />
     </LinearLayout>
-
-    <GridView
-        android:id="@+id/tool_list"
-        android:layout_marginTop="50dp"
+    <!-- 指示器-->
+    <com.xuexiang.xui.widget.tabbar.EasyIndicator
+        android:id="@+id/function_choose"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="3"
-        />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:indicator_line_show="true"
+        app:indicator_line_height="2dp"
+        app:indicator_height="42dp"
+        app:indicator_textSize="14sp"
+        app:indicator_width="0dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--  数据显示  -->
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/fl_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</FrameLayout>
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/linear_container"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+    </FrameLayout>
+</LinearLayout>

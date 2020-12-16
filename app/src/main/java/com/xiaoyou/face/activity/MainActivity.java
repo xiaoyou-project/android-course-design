@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,12 +18,17 @@ import com.arcsoft.face.enums.RuntimeABI;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.xiaoyou.face.R;
+import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.common.Constants;
 import com.xiaoyou.face.databinding.ActivityMainBinding;
 import com.xiaoyou.face.fragment.IndexFragment;
 import com.xiaoyou.face.fragment.MeFragment;
 import com.xiaoyou.face.fragment.ToolFragment;
+import com.xiaoyou.face.model.Channel;
+import com.xiaoyou.face.utils.ConfigUtil;
 import com.xuexiang.xui.XUI;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -31,6 +37,9 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.arcsoft.face.enums.DetectFaceOrientPriority.ASF_OP_270_ONLY;
+import static com.arcsoft.face.enums.DetectFaceOrientPriority.ASF_OP_ALL_OUT;
 
 
 /**
@@ -73,6 +82,8 @@ public class MainActivity extends BaseActivity {
         initTab();
         // 激活引擎
         activeEngine(getWindow().getDecorView());
+        //选择检测角度 默认270度
+        ConfigUtil.setFtOrient(getApplicationContext(), ASF_OP_ALL_OUT);
     }
 
     /**
@@ -81,8 +92,8 @@ public class MainActivity extends BaseActivity {
    private void initTab(){
        BottomNavigationBar bar = binding.bottomNavigationBar;
        bar.addItem(new BottomNavigationItem(R.drawable.ic_face, "签到"))
-               .addItem(new BottomNavigationItem(R.drawable.ic_tool_box, "工具"))
-               .addItem(new BottomNavigationItem(R.drawable.ic_person, "我的"))
+               .addItem(new BottomNavigationItem(R.drawable.ic_pie_chart, "统计"))
+               .addItem(new BottomNavigationItem(R.drawable.ic_search, "查询"))
                .setFirstSelectedPosition(0).initialise();
        // 设置底部导航栏的点击事件
        bar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
@@ -119,7 +130,6 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 激活引擎
-     *
      * @param view
      */
     @SuppressLint("CheckResult")

@@ -4,38 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
-import com.huantansheng.easyphotos.EasyPhotos;
-import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.xiaoyou.face.R;
-import com.xiaoyou.face.activity.CameraActivity;
+import com.xiaoyou.face.activity.RegisterAndRecognizeActivity;
+import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.databinding.FragmentIndexBinding;
-import com.xiaoyou.face.engine.GlideEngine;
-import com.xiaoyou.face.utils.FaceRead;
-import com.xiaoyou.face.utils.ToastUtils;
+import com.xiaoyou.face.model.Channel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 打卡的fragment类
@@ -87,21 +75,28 @@ public class IndexFragment extends Fragment implements
         // 数据初始化
         initView();
         initData();
-        // 设置签到按钮点击事件
-        binding.login.setOnClickListener(v->{
-//            EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())//参数说明：上下文，是否显示相机按钮，[配置Glide为图片加载引擎](https://github.com/HuanTanSheng/EasyPhotos/wiki/12-%E9%85%8D%E7%BD%AEImageEngine%EF%BC%8C%E6%94%AF%E6%8C%81%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%BA%93)
-//                    .setFileProviderAuthority("com.huantansheng.easyphotos.sample.fileprovider")//参数说明：见下方`FileProvider的配置`
-//                    .start(REQUEST_CODE);
-            startActivity(new Intent(getContext(),CameraActivity.class));
-        });
+        // 宫格布局初始化
+        // 9宫格布局初始化
+        ArrayList<Channel> channelList = new ArrayList<>();
+        channelList.add(new Channel(R.mipmap.face,"人脸录入"));
+        channelList.add(new Channel(R.mipmap.login,"开始签到"));
+        channelList.add(new Channel(R.mipmap.statistics,"签到详情"));
+        binding.toolList.setAdapter(new FunctionAdapter(channelList,getContext()));
+        // grad 布局点击事件监听
+        binding.toolList.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position){
+                case 0:
+                    startActivity(new Intent(getContext(), RegisterAndRecognizeActivity.class));
+                    break;
+                case 1:
 
-        // 测试事件
-        binding.test.setOnClickListener(v->{
-            EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())//参数说明：上下文，是否显示相机按钮，[配置Glide为图片加载引擎](https://github.com/HuanTanSheng/EasyPhotos/wiki/12-%E9%85%8D%E7%BD%AEImageEngine%EF%BC%8C%E6%94%AF%E6%8C%81%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%BA%93)
-                    .setFileProviderAuthority("com.xiaoyou.face.fileprovider")//参数说明：见下方`FileProvider的配置`
-                    .start(REQUEST_CODE);
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+            }
         });
-
         // 返回视图view
         return binding.getRoot();
     }
@@ -206,61 +201,25 @@ public class IndexFragment extends Fragment implements
         int month = mCalendarView.getCurMonth();
 
         Map<String, Calendar> map = new HashMap<>();
-//        map.put(getSchemeCalendar(year, month, 3, 0xFF40db25).toString(),
-//                getSchemeCalendar(year, month, 3, 0xFF40db25));
-//        map.put(getSchemeCalendar(year, month, 6, 0xFFe69138).toString(),
-//                getSchemeCalendar(year, month, 6, 0xFFe69138));
-//        map.put(getSchemeCalendar(year, month, 9, 0xFFdf1356).toString(),
-//                getSchemeCalendar(year, month, 9, 0xFFdf1356));
-//        map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d).toString(),
-//                getSchemeCalendar(year, month, 13, 0xFFedc56d));
-//        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d).toString(),
-//                getSchemeCalendar(year, month, 14, 0xFFedc56d));
-//        map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44).toString(),
-//                getSchemeCalendar(year, month, 15, 0xFFaacc44));
-//        map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0).toString(),
-//                getSchemeCalendar(year, month, 18, 0xFFbc13f0));
-//        map.put(getSchemeCalendar(year, month, 25, 0xFF13acf0).toString(),
-//                getSchemeCalendar(year, month, 25, 0xFF13acf0));
+        map.put(getSchemeCalendar(year, month, 3, 0xFF40db25).toString(),
+                getSchemeCalendar(year, month, 3, 0xFF40db25));
+        map.put(getSchemeCalendar(year, month, 6, 0xFFe69138).toString(),
+                getSchemeCalendar(year, month, 6, 0xFFe69138));
+        map.put(getSchemeCalendar(year, month, 9, 0xFFdf1356).toString(),
+                getSchemeCalendar(year, month, 9, 0xFFdf1356));
+        map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d).toString(),
+                getSchemeCalendar(year, month, 13, 0xFFedc56d));
+        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d).toString(),
+                getSchemeCalendar(year, month, 14, 0xFFedc56d));
+        map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44).toString(),
+                getSchemeCalendar(year, month, 15, 0xFFaacc44));
+        map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0).toString(),
+                getSchemeCalendar(year, month, 18, 0xFFbc13f0));
+        map.put(getSchemeCalendar(year, month, 25, 0xFF13acf0).toString(),
+                getSchemeCalendar(year, month, 25, 0xFF13acf0));
         map.put(getSchemeCalendar(year, month, 27, 0xFF13acf0).toString(),
                 getSchemeCalendar(year, month, 27, 0xFF13acf0));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         mCalendarView.setSchemeDate(map);
-    }
-
-    /**
-     * 拍照或者选择照片的回调事件
-     * @param requestCode  requestCode
-     * @param resultCode  resultCode
-     * @param data data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
-            //返回对象集合：如果你需要了解图片的宽、高、大小、用户是否选中原图选项等信息，可以用这个
-            ArrayList<Photo> resultPhotos = data.getParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS);
-            ToastUtils.success("图片路径"+resultPhotos.get(0).path);
-//            File file = new File(resultPhotos.get(0).path);
-            try {
-                FaceRead.checkFace(resultPhotos.get(0).path);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            if (file.exists()){
-//                Log.e("xiaoyou","文件存在");
-//                try {
-////                    FileInputStream inputStream = new FileInputStream(file);
-////                    FaceRead.checkFace(inputStream);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            inputStream = new FileInputStream(file);
-            Log.e("xiaoyou",resultPhotos.toString());
-            //            mSelected.clear();
-//            mSelected.addAll(resultPhotos);
-        }
     }
 }
