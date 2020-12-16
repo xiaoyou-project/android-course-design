@@ -3,7 +3,10 @@ package com.xiaoyou.face.faceserver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
@@ -17,6 +20,8 @@ import com.arcsoft.imageutil.ArcSoftImageUtil;
 import com.arcsoft.imageutil.ArcSoftImageUtilError;
 import com.arcsoft.imageutil.ArcSoftRotateDegree;
 import com.xiaoyou.face.model.FaceRegisterInfo;
+import com.xiaoyou.face.service.RegisterInfo;
+import com.xiaoyou.face.service.SQLiteHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -448,7 +453,8 @@ public class FaceServer {
      * @param faceFeature 传入特征数据
      * @return 比对结果
      */
-    public CompareResult getTopOfFaceLib(FaceFeature faceFeature) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public CompareResult getTopOfFaceLib(FaceFeature faceFeature, Context context) {
         if (faceEngine == null || isProcessing || faceFeature == null || faceRegisterInfoList == null || faceRegisterInfoList.size() == 0) {
             return null;
         }
@@ -467,7 +473,10 @@ public class FaceServer {
         }
         isProcessing = false;
         if (maxSimilarIndex != -1) {
-            return new CompareResult(faceRegisterInfoList.get(maxSimilarIndex).getName(), maxSimilar);
+            // 从数据库中查找信息
+            SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
+            RegisterInfo registerInfo = sqLiteHelper.getInfo(Integer.parseInt(faceRegisterInfoList.get(maxSimilarIndex).getName()));
+            return new CompareResult(registerInfo.getId()+"",registerInfo.getStuId(),registerInfo.getName(),maxSimilar);
         }
         return null;
     }

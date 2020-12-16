@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class StudentInfo {
     //学生学号
-    private long id;
+    private String id;
     //学生名字
     private String name;
     //是否打卡 1打卡成功，0打卡失败

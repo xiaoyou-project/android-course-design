@@ -10,6 +10,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.xiaoyou.face.R;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private final static String DATABASE_NAME = "FaceCheck";
     private final static int DATABASE_VERSION = 1;
     private final static String TABLE_NAME = "StudentInfo";
-    private final static String TABLE_NAME2 = "Student";
+    private final static String TABLE_REGISTER = "Student";
 
     //创建数据库，里面添加了3个参数，分别是：Msgone VARCHAR类型，30长度当然这了可以自定义
     //Msgtwo VARCHAR(20)   Msgthree VARCHAR(30))  NOT NULL不能为空
@@ -36,6 +38,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     String createStudent = "CREATE TABLE Student (" +
             "  id int(11) NOT NULL," +
+            "  stu_id varchar(20) NOT NULL," +
             "  name varchar(20) DEFAULT NULL," +
             "  PRIMARY KEY (id))";
 
@@ -55,7 +58,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
-        String sql2 = "DROP TABLE IF EXISTS " + TABLE_NAME2;
+        String sql2 = "DROP TABLE IF EXISTS " + TABLE_REGISTER;
         db.execSQL(sql);
         db.execSQL(sql2);
         onCreate(db);
@@ -83,7 +86,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public int queryCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = new String[1];
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME2, selectionArgs);
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_REGISTER, selectionArgs);
         return cursor.getCount();
     }
 
@@ -127,15 +130,41 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_NAME, null, cv);
     }
 
-    //学生数据插入
+    /**
+     *  学生注册
+     * @param studentInfo
+     * @return
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public long insert(StudentInfo studentInfo) {
+    public long insert(RegisterInfo studentInfo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("id", studentInfo.getId());
+        cv.put("stu_id", studentInfo.getStuId());
         cv.put("name", studentInfo.getName());
-        return db.insert(TABLE_NAME, null, cv);
+        return db.insert(TABLE_REGISTER, null, cv);
     }
+
+    /**
+     *  查询学生信息
+     * @param id 注册id
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public RegisterInfo getInfo(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_REGISTER,null,"id=?",new String[]{""+id},null,null,null);
+        RegisterInfo registerInfo = new RegisterInfo();
+        if (cursor.getCount()!=0){
+            if (cursor.moveToNext()){
+                registerInfo.setId(cursor.getInt(0));
+                registerInfo.setStuId(cursor.getString(1));
+                registerInfo.setName(cursor.getString(2));
+            }
+        }
+        return registerInfo;
+    }
+
 
 
 }

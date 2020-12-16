@@ -1,7 +1,9 @@
 package com.xiaoyou.face.faceserver;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 比对结果
@@ -9,6 +11,8 @@ import lombok.Data;
  * @date 2020/12/16
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CompareResult {
     /**
      * id
@@ -31,8 +35,10 @@ public class CompareResult {
      */
     private int trackId;
 
-    public CompareResult(String id, float similar) {
+    public CompareResult(String id,String stuId,String name, float similar) {
         this.id = id;
+        this.userNo =stuId;
+        this.userName =name;
         this.similar = similar;
     }
 }

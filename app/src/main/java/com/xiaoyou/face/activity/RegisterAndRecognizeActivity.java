@@ -1,12 +1,18 @@
 package com.xiaoyou.face.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +21,7 @@ import android.view.WindowManager;
 
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -27,6 +34,8 @@ import com.xiaoyou.face.faceserver.CompareResult;
 import com.xiaoyou.face.faceserver.FaceServer;
 import com.xiaoyou.face.model.DrawInfo;
 import com.xiaoyou.face.model.FacePreviewInfo;
+import com.xiaoyou.face.service.RegisterInfo;
+import com.xiaoyou.face.service.SQLiteHelper;
 import com.xiaoyou.face.utils.ConfigUtil;
 import com.xiaoyou.face.utils.DrawHelper;
 import com.xiaoyou.face.utils.camera.CameraHelper;
@@ -92,6 +101,8 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      * 出错重试最大次数
      */
     private static final int MAX_RETRY_TIME = 3;
+
+    private Context context;
 
     private CameraHelper cameraHelper;
     private DrawHelper drawHelper;
@@ -230,6 +241,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
             xuiAlphaImageView.setVisibility(View.INVISIBLE);
         }
 
+        context = this;
     }
 
     /**
@@ -337,6 +349,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
             //请求FR的回调
             // 面部特征信息获取的回调事件
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onFaceFeatureInfoGet(@Nullable final FaceFeature faceFeature, final Integer requestId, final Integer errorCode) {
                 //FR成功
@@ -576,56 +589,71 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      * 显示人脸录入弹窗
      */
     private void faceInput(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList){
+        int id = faceHelper.getTrackedFaceCount();
         //  显示录入弹窗
-//         new MaterialDialog.Builder(this)
-//            .customView(R.layout.dialog_input, true)
-//            .title("人脸录入")
-//            .positiveText(R.string.face_input)
-//            .negativeText(R.string.face_cancel)
-//            .onPositive((dialog, which) -> {
-//                // 点击录入的时的点击事件
-//                MaterialEditText no =dialog.findViewById(R.id.input_no);
-//                MaterialEditText name =dialog.findViewById(R.id.input_name);
-                Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
-                    boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
-                            facePreviewInfoList.get(0).getFaceInfo(),""+faceHelper.getTrackedFaceCount());
-                    emitter.onNext(success);
-                })
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Boolean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+        Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
+            boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
+                    facePreviewInfoList.get(0).getFaceInfo(),""+id);
+            emitter.onNext(success);
+        }).subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-                            }
+            }
 
-                            // 这里我们们可以判断是否注册成功
-                            @Override
-                            public void onNext(@NotNull Boolean success) {
-                                String result = success ? "register success!" : "register failed!";
-                                showToast(result);
-                                registerStatus = REGISTER_STATUS_DONE;
-                                //todo:注册成功以后就退出去
-                            }
+            // 这里我们们可以判断是否注册成功
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onNext(@NotNull Boolean success) {
+               String result = success ? "register success!" : "register failed!";
+               showToast(result);
+               registerStatus = REGISTER_STATUS_DONE;
+               if(success){
+                   Message msg = handler.obtainMessage();
+                   msg.what = 1;
+                   msg.obj = id;
+                   handler.sendMessage(msg);
+               }
+            }
 
-                            // 注册失败调用这个函数
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                                showToast("register failed!");
-                                registerStatus = REGISTER_STATUS_DONE;
-                            }
+            // 注册失败调用这个函数
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                showToast("register failed!");
+                registerStatus = REGISTER_STATUS_DONE;
+            }
 
-                            // 注册完成
-                            @Override
-                            public void onComplete() {
+            // 注册完成
+            @Override
+            public void onComplete() {
 
-                            }
-                        });
-//
-//            })
-//            .show();
+            }
+        });
     }
+
+    private final Handler handler =new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        @SuppressLint({"SetTextI18n", "SetJavaScriptEnabled"})
+        public void handleMessage(@NotNull Message msg) {
+            int id = (int) msg.obj;
+            new MaterialDialog.Builder(context)
+                    .customView(R.layout.dialog_input, true)
+                    .title("人脸录入")
+                    .positiveText(R.string.face_input)
+                    .negativeText(R.string.face_cancel)
+                    .onPositive((dialog, which) -> {
+                        // 点击录入的时的点击事件
+                        MaterialEditText no = dialog.findViewById(R.id.input_no);
+                        MaterialEditText name = dialog.findViewById(R.id.input_name);
+                        SQLiteHelper sqLiteHelper = new SQLiteHelper(getApplicationContext());
+                        sqLiteHelper.insert(new RegisterInfo(id,no.getEditValue(),name.getEditValue()));
+                    }).show();
+        }
+    };
 
     /**
      *  绘制识别结果
@@ -724,12 +752,13 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      * @param frFace
      * @param requestId
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void searchFace(final FaceFeature frFace, final Integer requestId) {
         Observable
                 .create((ObservableOnSubscribe<CompareResult>) emitter -> {
                     // 这里我们不断获取搜索到的结果并进行处理
 //                        Log.i(TAG, "subscribe: fr search start = " + System.currentTimeMillis() + " trackId = " + requestId);
-                    CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace);
+                    CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace,this);
 //                        Log.i(TAG, "subscribe: fr search end = " + System.currentTimeMillis() + " trackId = " + requestId);
                     emitter.onNext(compareResult);
                 })
