@@ -4,9 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.ToolFragment">
+    <LinearLayout
+        android:gravity="center"
+        android:background="@color/primary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/function_name"
+            />
+    </LinearLayout>
 
     <GridView
         android:id="@+id/tool_list"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="3"

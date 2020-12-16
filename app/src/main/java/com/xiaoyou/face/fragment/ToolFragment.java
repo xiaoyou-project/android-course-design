@@ -18,6 +18,8 @@ import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.xiaoyou.face.R;
 import com.xiaoyou.face.activity.CameraActivity;
+import com.xiaoyou.face.activity.SearchActivity;
+import com.xiaoyou.face.activity.StatisticsActivity;
 import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.databinding.FragmentIndexBinding;
 import com.xiaoyou.face.databinding.FragmentToolBinding;
@@ -73,6 +75,13 @@ public class ToolFragment extends Fragment {
             switch (position){
                 case 0:
                     faceInput();
+                    break;
+                case 1:
+                    startActivity(new Intent(getContext(), StatisticsActivity.class));
+                    break;
+                case 2:
+                    startActivity(new Intent(getContext(), SearchActivity.class));
+                    break;
                 default:
                     break;
             }

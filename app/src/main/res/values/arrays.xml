@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_mode_entry">
+        <item>学号</item>
+        <item>姓名</item>
+        <item>签到时间</item>
+    </string-array>
+
+</resources>

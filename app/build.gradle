@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    // 使用本地库
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // 使用XUL库 https://gitee.com/xuexiangjys/XUI
     implementation 'com.github.xuexiangjys:XUI:1.1.5'
@@ -52,21 +54,24 @@ dependencies {
 
     // 底部导航栏
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.2.0'
-
     // 多彩日历组件
     implementation 'com.haibin:calendarview:3.7.0'
-
     // 拍照库
     implementation 'com.github.HuanTanSheng:EasyPhotos:3.0.6'
-
     // 相机
     implementation 'com.wonderkiln:camerakit:0.13.1'
-    // 阿里云人脸识别
-
 
     // 图片加载引擎
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // 图表库 https://github.com/PhilJay/MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //WebView
+    implementation 'com.github.xuexiangjys.AgentWeb:agentweb-core:1.0.0'
+    implementation 'com.github.xuexiangjys.AgentWeb:agentweb-download:1.0.0'//选填
+    implementation 'com.github.xuexiangjys.AgentWeb:agentweb-filechooser:1.0.0'//选填
 
     // Lombok插件
     //1、lombok依赖
@@ -76,9 +81,11 @@ dependencies {
     //主动声明注解解释器
     annotationProcessor 'org.projectlombok:lombok:1.16.6'
 
+    // gson 一个json 解析库 https://github.com/google/gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 
-
+    // 其他安卓自带依赖
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

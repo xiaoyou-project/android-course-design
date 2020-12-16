@@ -8,4 +8,11 @@
     <string name="face_number">学号</string>
     <string name="face_name">姓名</string>
     <string name="face_upload">人脸录入</string>
+
+    <!-- 工具 -->
+    <string name="function_name">工具</string>
+
+    <!--数据查询-->
+    <string name="search_input">关键词</string>
+    <string name="search_search">搜索</string>
 </resources>
