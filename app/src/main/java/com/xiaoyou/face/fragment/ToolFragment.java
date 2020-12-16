@@ -86,8 +86,8 @@ public class ToolFragment extends Fragment {
         yvals.add(new PieEntry(30, "未签到"));
         //设置每份的颜色
         List<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#2ecc71"));
-        colors.add(Color.parseColor("#bdc3c7"));
+        colors.add(Color.parseColor("#409EFF"));
+        colors.add(Color.parseColor("#F56C6C"));
         // 图表初始化
         PieChart pieChart = binding.flContainer;
         //  是否显示中间的洞
@@ -265,7 +265,7 @@ public class ToolFragment extends Fragment {
         //创建条形图对象
         BarDataSet setComp1 = new BarDataSet(valsComp1, "历史考勤记录");
         setComp1.setDrawIcons(false);
-        setComp1.setColors(Color.parseColor("#2ecc71"),Color.parseColor("#bdc3c7"));
+        setComp1.setColors(Color.parseColor("#67c23a"),Color.parseColor("#f56c6c"));
         setComp1.setStackLabels(new String[]{"已签到", "未签到"});
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(setComp1);

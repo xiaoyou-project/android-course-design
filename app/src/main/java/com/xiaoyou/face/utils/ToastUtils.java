@@ -10,8 +10,7 @@ import com.xuexiang.xui.XUI;
 import com.xuexiang.xui.widget.toast.XToast;
 
 /**
- * 描述
- *
+ * 自定义弹框函数
  * @author 小游
  * @date 2020/12/15
  */

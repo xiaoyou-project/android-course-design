@@ -17,6 +17,7 @@ import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.xiaoyou.face.R;
 import com.xiaoyou.face.activity.RegisterAndRecognizeActivity;
+import com.xiaoyou.face.activity.SignDetailActivity;
 import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.databinding.FragmentIndexBinding;
 import com.xiaoyou.face.model.Channel;
@@ -89,9 +90,13 @@ public class IndexFragment extends Fragment implements
                     startActivity(new Intent(getContext(), RegisterAndRecognizeActivity.class));
                     break;
                 case 1:
-
+                    // 签到不需要显示录入按钮
+                    Intent intent = new Intent(getContext(), RegisterAndRecognizeActivity.class);
+                    intent.putExtra("login",false);
+                    startActivity(intent);
                     break;
                 case 2:
+                    startActivity(new Intent(getContext(), SignDetailActivity.class));
                     break;
                 default:
                     break;

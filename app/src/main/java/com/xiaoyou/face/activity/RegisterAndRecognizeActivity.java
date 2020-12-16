@@ -2,6 +2,7 @@ package com.xiaoyou.face.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.hardware.Camera;
@@ -47,6 +48,8 @@ import com.arcsoft.face.LivenessInfo;
 import com.arcsoft.face.enums.DetectFaceOrientPriority;
 import com.arcsoft.face.enums.DetectMode;
 import com.xuexiang.xui.XUI;
+import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.alpha.XUIAlphaImageView;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 
@@ -194,6 +197,9 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         initView();
     }
 
+    /**
+     * 视图初始化
+     */
     private void initView() {
         previewView = findViewById(R.id.single_camera_texture_preview);
         //在布局结束后才做初始化操作
@@ -213,6 +219,17 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         int spanCount = (int) (dm.widthPixels / (getResources().getDisplayMetrics().density * 100 + 0.5f));
         recyclerShowFaceInfo.setLayoutManager(new GridLayoutManager(this, spanCount));
         recyclerShowFaceInfo.setItemAnimator(new DefaultItemAnimator());
+
+        // 导航栏返回事件
+        TitleBar titleBar =  findViewById(R.id.navigation);
+        titleBar.setLeftClickListener(v->{finish();});
+        // 判断是否需要显示签到按钮
+        Intent intent = getIntent();
+        if (!intent.getBooleanExtra("login",true)){
+            XUIAlphaImageView xuiAlphaImageView=findViewById(R.id.iv_take_photo);
+            xuiAlphaImageView.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     /**
