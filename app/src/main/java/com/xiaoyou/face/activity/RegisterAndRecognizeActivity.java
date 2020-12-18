@@ -83,6 +83,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * 人脸识别的核心部分
+ *
  * @author 小游
  * @date 2020/12/16
  */
@@ -232,12 +233,14 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         recyclerShowFaceInfo.setItemAnimator(new DefaultItemAnimator());
 
         // 导航栏返回事件
-        TitleBar titleBar =  findViewById(R.id.navigation);
-        titleBar.setLeftClickListener(v->{finish();});
+        TitleBar titleBar = findViewById(R.id.navigation);
+        titleBar.setLeftClickListener(v -> {
+            finish();
+        });
         // 判断是否需要显示签到按钮
         Intent intent = getIntent();
-        if (!intent.getBooleanExtra("login",true)){
-            XUIAlphaImageView xuiAlphaImageView=findViewById(R.id.iv_take_photo);
+        if (!intent.getBooleanExtra("login", true)) {
+            XUIAlphaImageView xuiAlphaImageView = findViewById(R.id.iv_take_photo);
             xuiAlphaImageView.setVisibility(View.INVISIBLE);
         }
 
@@ -574,6 +577,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 注册人脸
+     *
      * @param nv21
      * @param facePreviewInfoList
      */
@@ -581,60 +585,60 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
             registerStatus = REGISTER_STATUS_PROCESSING;
             // 点击注册的时候我们需要录入人脸信息
-            faceInput(nv21,facePreviewInfoList);
+            faceInput(nv21, facePreviewInfoList);
         }
     }
 
     /**
      * 显示人脸录入弹窗
      */
-    private void faceInput(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList){
+    private void faceInput(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList) {
         int id = faceHelper.getTrackedFaceCount();
         //  显示录入弹窗
         Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
             boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
-                    facePreviewInfoList.get(0).getFaceInfo(),""+id);
+                    facePreviewInfoList.get(0).getFaceInfo(), "" + id);
             emitter.onNext(success);
         }).subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            }
+                    }
 
-            // 这里我们们可以判断是否注册成功
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onNext(@NotNull Boolean success) {
-               String result = success ? "register success!" : "register failed!";
-               showToast(result);
-               registerStatus = REGISTER_STATUS_DONE;
-               if(success){
-                   Message msg = handler.obtainMessage();
-                   msg.what = 1;
-                   msg.obj = id;
-                   handler.sendMessage(msg);
-               }
-            }
+                    // 这里我们们可以判断是否注册成功
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onNext(@NotNull Boolean success) {
+                        String result = success ? "register success!" : "register failed!";
+                        showToast(result);
+                        registerStatus = REGISTER_STATUS_DONE;
+                        if (success) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 1;
+                            msg.obj = id;
+                            handler.sendMessage(msg);
+                        }
+                    }
 
-            // 注册失败调用这个函数
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                showToast("register failed!");
-                registerStatus = REGISTER_STATUS_DONE;
-            }
+                    // 注册失败调用这个函数
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showToast("register failed!");
+                        registerStatus = REGISTER_STATUS_DONE;
+                    }
 
-            // 注册完成
-            @Override
-            public void onComplete() {
+                    // 注册完成
+                    @Override
+                    public void onComplete() {
 
-            }
-        });
+                    }
+                });
     }
 
-    private final Handler handler =new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    private final Handler handler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         @SuppressLint({"SetTextI18n", "SetJavaScriptEnabled"})
@@ -650,13 +654,14 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                         MaterialEditText no = dialog.findViewById(R.id.input_no);
                         MaterialEditText name = dialog.findViewById(R.id.input_name);
                         SQLiteHelper sqLiteHelper = new SQLiteHelper(getApplicationContext());
-                        sqLiteHelper.insert(new RegisterInfo(id,no.getEditValue(),name.getEditValue()));
+                        sqLiteHelper.studentRegister(new RegisterInfo(id, no.getEditValue(), name.getEditValue()));
                     }).show();
         }
     };
 
     /**
-     *  绘制识别结果
+     * 绘制识别结果
+     *
      * @param facePreviewInfoList 识别结果
      */
     private void drawPreviewInfo(List<FacePreviewInfo> facePreviewInfoList) {
@@ -689,6 +694,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 权限申请回调函数
+     *
      * @param requestCode  请求码
      * @param isAllGranted 是否全部被同意
      */
@@ -706,6 +712,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 删除已经离开的人脸
+     *
      * @param facePreviewInfoList 人脸和trackId列表
      */
     private void clearLeftFace(List<FacePreviewInfo> facePreviewInfoList) {
@@ -749,6 +756,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 搜索人脸
+     *
      * @param frFace
      * @param requestId
      */
@@ -758,7 +766,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                 .create((ObservableOnSubscribe<CompareResult>) emitter -> {
                     // 这里我们不断获取搜索到的结果并进行处理
 //                        Log.i(TAG, "subscribe: fr search start = " + System.currentTimeMillis() + " trackId = " + requestId);
-                    CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace,this);
+                    CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace, this);
 //                        Log.i(TAG, "subscribe: fr search end = " + System.currentTimeMillis() + " trackId = " + requestId);
                     emitter.onNext(compareResult);
                 })
@@ -781,7 +789,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                         }
 
                         // 这里我们要确保图片的置信度要大于我们设定的置信度
-                       if (compareResult.getSimilar() > SIMILAR_THRESHOLD) {
+                        if (compareResult.getSimilar() > SIMILAR_THRESHOLD) {
                             boolean isAdded = false;
                             if (compareResultList == null) {
                                 requestFeatureStatusMap.put(requestId, RequestFeatureStatus.FAILED);
@@ -841,6 +849,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 切换相机。注意：若切换相机发现检测不到人脸，则极有可能是检测角度导致的，需要销毁引擎重新创建或者在设置界面修改配置的检测角度
+     *
      * @param view
      */
     public void switchCamera(View view) {
@@ -870,6 +879,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 将map中key对应的value增1回传
+     *
      * @param countMap map
      * @param key      key
      * @return 增1后的value
@@ -888,6 +898,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 延迟 FAIL_RETRY_INTERVAL 重新进行活体检测
+     *
      * @param requestId 人脸ID
      */
     private void retryLivenessDetectDelayed(final Integer requestId) {
@@ -925,6 +936,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 延迟 FAIL_RETRY_INTERVAL 重新进行人脸识别
+     *
      * @param requestId 人脸ID
      */
     private void retryRecognizeDelayed(final Integer requestId) {

@@ -1,7 +1,5 @@
 package com.xiaoyou.face.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -10,19 +8,16 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author lenyuqin
- * @data 2020/12/16
+ * @data 2020/12/18
  */
 @Data
 @AllArgsConstructor
-public class StudentInfo {
+@NoArgsConstructor
+public class StudentInfoTO {
     //学生学号
     private String stuId;
     //学生名字
     private String name;
-    //是否打卡 1打卡成功，0打卡失败
-    private int isSign;
     //打卡时间
-    private LocalDate dateTime;
-
-
+    private Date dateTime;
 }
