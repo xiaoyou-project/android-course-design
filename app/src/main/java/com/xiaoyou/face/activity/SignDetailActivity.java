@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 
@@ -13,8 +15,14 @@ import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
 import com.xiaoyou.face.R;
 import com.xiaoyou.face.databinding.ActivitySignDetailBinding;
 import com.xiaoyou.face.model.Login;
+import com.xiaoyou.face.service.History;
+import com.xiaoyou.face.service.SQLiteHelper;
+import com.xiaoyou.face.service.Service;
+import com.xiaoyou.face.service.StudentInfo;
+import com.xiaoyou.face.service.StudentInfoTO;
 import com.xuexiang.xui.XUI;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,20 +61,20 @@ public class SignDetailActivity extends AppCompatActivity {
      */
     private void showDetail(){
         List<Login> list = new ArrayList<>();
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
-        list.add(new Login("1806040103","小游","2020/12/16 20:21:20"));
+        // 查询签到详情信息
+        Service service = new SQLiteHelper(this);
+        try {
+            List<StudentInfoTO> histories =service.getCountToday();
+            Log.e("xiaoyou","结果大小"+histories.size());
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for (StudentInfoTO history : histories) {
+                Log.e("xiaoyou",history.getName());
+                list.add(new Login(history.getStuId(),history.getName(),sdf.format(history.getDateTime())));
+            }
+        }catch (Exception e){
+            Log.e("xiaoyou",e.getMessage());
+            return;
+        }
         // 设置缩放
 //        binding.table.setZoom(true);
         // 显示数据

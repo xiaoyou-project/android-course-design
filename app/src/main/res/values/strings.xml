@@ -67,6 +67,7 @@
     <string name="switch_camera_failed">切换相机失败</string>
     <string name="recognize_failed_notice">未通过:%s</string>
     <string name="recognize_success_notice">[%s]签到成功!</string>
+    <string name="recognize_success_notice_true">[%s]已签到!</string>
     <string name="recognize_have_notice">[%s]已注册!</string>
     <string name="low_confidence_level">人脸置信度低</string>
     <string name="specific_engine_init_failed">%s 初始化失败，错误码为:%d</string>

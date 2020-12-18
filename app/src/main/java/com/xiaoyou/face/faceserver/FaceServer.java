@@ -22,6 +22,7 @@ import com.arcsoft.imageutil.ArcSoftRotateDegree;
 import com.xiaoyou.face.model.FaceRegisterInfo;
 import com.xiaoyou.face.service.RegisterInfo;
 import com.xiaoyou.face.service.SQLiteHelper;
+import com.xiaoyou.face.service.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -474,8 +475,8 @@ public class FaceServer {
         isProcessing = false;
         if (maxSimilarIndex != -1) {
             // 从数据库中查找信息
-            SQLiteHelper sqLiteHelper = new SQLiteHelper(context);
-            RegisterInfo registerInfo = sqLiteHelper.getInfo(Integer.parseInt(faceRegisterInfoList.get(maxSimilarIndex).getName()));
+            Service sqLiteHelper = new SQLiteHelper(context);
+            RegisterInfo registerInfo = sqLiteHelper.getStudentInfo(Integer.parseInt(faceRegisterInfoList.get(maxSimilarIndex).getName()));
             return new CompareResult(registerInfo.getId()+"",registerInfo.getStuId(),registerInfo.getName(),maxSimilar);
         }
         return null;

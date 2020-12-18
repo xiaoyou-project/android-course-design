@@ -81,9 +81,9 @@ public class MainActivity extends BaseActivity {
         // tab初始化
         initTab();
         // 激活引擎
-//        activeEngine(getWindow().getDecorView());
+        activeEngine(getWindow().getDecorView());
         //选择检测角度 默认270度
-//        ConfigUtil.setFtOrient(getApplicationContext(), ASF_OP_ALL_OUT);
+        ConfigUtil.setFtOrient(getApplicationContext(), ASF_OP_ALL_OUT);
     }
 
     /**

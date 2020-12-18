@@ -9,12 +9,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.xiaoyou.face.service.Is_Sign;
 import com.xiaoyou.face.service.RegisterInfo;
 import com.xiaoyou.face.service.SQLiteHelper;
+import com.xiaoyou.face.service.Service;
 import com.xiaoyou.face.service.StudentInfo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
@@ -35,12 +37,16 @@ public class ExampleInstrumentedTest {
     @Test
     public void addData(){
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SQLiteHelper sqLiteHelper = new SQLiteHelper(appContext);
-        sqLiteHelper.insert(new RegisterInfo(1,"1806040103","小游"));
-        sqLiteHelper.insert(new RegisterInfo(2,"1806040104","小游1"));
-        sqLiteHelper.insert(new RegisterInfo(3,"1806040105","小游2"));
-        sqLiteHelper.insert(new RegisterInfo(4,"1806040106","小游3"));
-        Log.e("xiaoyou",sqLiteHelper.getInfo(1).getName());
+        Service service;
+        service = new SQLiteHelper(appContext);
+       service.signUp("1806040103","小游", LocalDateTime.now());
+       service.signUp("1806040104","小游1", LocalDateTime.now());
+       service.signUp("1806040105","小游2", LocalDateTime.now());
+       service.signUp("1806040106","小游3", LocalDateTime.now());
+       service.signUp("1806040107","小游4", LocalDateTime.now());
+       service.signUp("1806040108","小游5", LocalDateTime.now());
+
+
     }
 
     @Test

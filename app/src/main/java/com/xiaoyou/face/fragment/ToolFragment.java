@@ -1,10 +1,13 @@
 package com.xiaoyou.face.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +27,12 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.xiaoyou.face.databinding.FragmentToolBinding;
+import com.xiaoyou.face.service.History;
+import com.xiaoyou.face.service.SQLiteHelper;
+import com.xiaoyou.face.service.Service;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +89,12 @@ public class ToolFragment extends Fragment {
         binding.linearContainer.setVisibility(View.INVISIBLE);
         // 设置每份所占数量
         List<PieEntry> yvals = new ArrayList<>();
-        yvals.add(new PieEntry(50, "已签到"));
-        yvals.add(new PieEntry(30, "未签到"));
+        // 获取签到记录
+        Service service = new SQLiteHelper(getContext());
+        History history = service.getTodayHistory();
+
+        yvals.add(new PieEntry(history.getIsSignUp(), "已签到"));
+        yvals.add(new PieEntry(history.getNotSigUp(), "未签到"));
         //设置每份的颜色
         List<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#409EFF"));
@@ -224,14 +235,16 @@ public class ToolFragment extends Fragment {
         XAxis xAxis = attendanceChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
+        // 获取考勤历史
+        Service service = new SQLiteHelper(getContext());
+        List<History> histories = service.getHistory();
+        Log.e("xiaoyou","历史数据长度"+histories.size());
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         // 设置x做显示
         ArrayList<String> data2 = new ArrayList<>();
-        data2.add("2019-08-1");
-        data2.add("2019-08-2");
-        data2.add("2019-08-3");
-        data2.add("2019-08-4");
-        data2.add("2019-08-5");
-        data2.add("2019-08-6");
+        for (History history : histories) {
+            data2.add(sdf.format(history.getDate()));
+        }
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -243,13 +256,9 @@ public class ToolFragment extends Fragment {
         xAxis.setGranularity(1f);
         //数据集1
         List<BarEntry> valsComp1 = new ArrayList<BarEntry>();
-        valsComp1.add(new BarEntry(0,new float[] { 5, 20}));
-        valsComp1.add(new BarEntry(1,new float[] { 10,6 }));
-        valsComp1.add(new BarEntry(2,new float[] { 10, 20}));
-        valsComp1.add(new BarEntry(3,new float[] { 10, 20}));
-        valsComp1.add(new BarEntry(4,new float[] { 10, 20}));
-        valsComp1.add(new BarEntry(5,new float[] { 10, 20}));
-
+        for(int i=0; i< histories.size();i++){
+            valsComp1.add(new BarEntry(i,new float[] { histories.get(i).getIsSignUp(), histories.get(i).getNotSigUp()}));
+        }
 
 //        XAxis xl = mChart.getXAxis();
 //        xl.setValueFormatter(new IAxisValueFormatter() {

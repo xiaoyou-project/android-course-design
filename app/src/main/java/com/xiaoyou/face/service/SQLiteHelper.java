@@ -10,14 +10,11 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.xiaoyou.face.R;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,12 +24,12 @@ import java.util.List;
 public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     private final static String DATABASE_NAME = "FaceCheck";
     private final static int DATABASE_VERSION = 1;
-    private final static String TABLE_NAME = "StudentInfo";
-    private final static String TABLE_REGISTER = "Student";
+    private final static String TABLE_ATTENDANCE = "attendance";
+    private final static String TABLE_STUDENT = "student";
 
     //创建数据库，里面添加了3个参数，分别是：Msgone VARCHAR类型，30长度当然这了可以自定义
     //Msgtwo VARCHAR(20)   Msgthree VARCHAR(30))  NOT NULL不能为空
-    String sql = "CREATE TABLE StudentInfo (stu_id int(11) NOT NULL ," +
+    String sql = "CREATE TABLE attendance (stu_id int(11) NOT NULL ," +
             "  name varchar(20) DEFAULT NULL ," +
             "  is_Sign bit(1) DEFAULT NULL ," +
             "  day int(5) DEFAULT NULL ," +
@@ -40,7 +37,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
             "  month int(5) DEFAULT NULL ," +
             "  year int(5) DEFAULT NULL)";
 
-    String createStudent = "CREATE TABLE Student (" +
+    String createStudent = "CREATE TABLE student (" +
             "  id int(11) NOT NULL," +
             "  stu_id varchar(20) NOT NULL," +
             "  name varchar(20) DEFAULT NULL," +
@@ -61,8 +58,8 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
-        String sql2 = "DROP TABLE IF EXISTS " + TABLE_REGISTER;
+        String sql = "DROP TABLE IF EXISTS " + TABLE_ATTENDANCE;
+        String sql2 = "DROP TABLE IF EXISTS " + TABLE_STUDENT;
         db.execSQL(sql);
         db.execSQL(sql2);
         onCreate(db);
@@ -75,7 +72,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = new String[1];
         selectionArgs[1] = String.valueOf(LocalDate.now().getMonthValue());
-        Cursor cursor = db.rawQuery("SELECT DISTINCT day FROM " + TABLE_NAME + " WHERE month = ?", selectionArgs);
+        Cursor cursor = db.rawQuery("SELECT DISTINCT day FROM " + TABLE_ATTENDANCE + " WHERE month = ?", selectionArgs);
         ArrayList<Integer> result = new ArrayList<>();
         while (cursor.isLast()) {
             String columnName = cursor.getColumnName(1);
@@ -100,7 +97,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         cv.put("id", registerInfo.getId());
         cv.put("stu_id", registerInfo.getStuId());
         cv.put("name", registerInfo.getName());
-        return db.insert(TABLE_REGISTER, null, cv);
+        return db.insert(TABLE_STUDENT, null, cv);
     }
 
     /**
@@ -113,7 +110,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public RegisterInfo getStudentInfo(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_REGISTER, null, "id=?", new String[]{"" + id}, null, null, null);
+        Cursor cursor = db.query(TABLE_STUDENT, null, "id=?", new String[]{"" + id}, null, null, null);
         RegisterInfo registerInfo = new RegisterInfo();
         if (cursor.getCount() != 0) {
             if (cursor.moveToNext()) {
@@ -141,9 +138,9 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         return localDates;
     }
 
+
     /**
      * 签到统计部分
-     *
      * @return 学号，姓名，签到时间
      */
     @Override
@@ -155,15 +152,14 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         selectionArgs[0] = String.valueOf(LocalDateTime.now().getDayOfMonth());
         selectionArgs[1] = String.valueOf(LocalDate.now().getMonthValue());
         selectionArgs[2] = String.valueOf(LocalDate.now().getYear());
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT  * FROM " + TABLE_NAME + " WHERE  day= ? and month = ? and year = ?", selectionArgs);
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT  * FROM " + TABLE_ATTENDANCE + " WHERE  day= ? and month = ? and year = ?", selectionArgs);
         ArrayList<StudentInfoTO> studentInfoTO = new ArrayList<>();
-        if (cursor.isLast()) {
+        while (cursor.moveToNext()) {
             StudentInfoTO studentInfoTO1 = new StudentInfoTO();
             studentInfoTO1.setDateTime(sdf.parse(cursor.getString(4)));
             studentInfoTO1.setStuId(cursor.getString(1));
             studentInfoTO1.setName(cursor.getString(2));
             studentInfoTO.add(studentInfoTO1);
-            cursor.moveToNext();
         }
         return studentInfoTO;
     }
@@ -183,8 +179,8 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         selectionArgs[0] = String.valueOf(LocalDateTime.now().getDayOfMonth());
         selectionArgs[1] = String.valueOf(LocalDate.now().getMonthValue());
         selectionArgs[2] = String.valueOf(LocalDate.now().getYear());
-        @SuppressLint("Recycle") Cursor cursor1 = db.rawQuery("SELECT  * FROM " + TABLE_NAME + " WHERE  day= ? and month = ? and year = ? ", selectionArgs);
-        @SuppressLint("Recycle") Cursor curso2r = db.rawQuery("SELECT  * FROM " + TABLE_REGISTER, null);
+        @SuppressLint("Recycle") Cursor cursor1 = db.rawQuery("SELECT  * FROM " + TABLE_ATTENDANCE + " WHERE  day= ? and month = ? and year = ? ", selectionArgs);
+        @SuppressLint("Recycle") Cursor curso2r = db.rawQuery("SELECT  * FROM " + TABLE_STUDENT, null);
         int count = curso2r.getCount();
         History history = new History();
         history.setDate(LocalDate.now());
@@ -195,7 +191,6 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
 
     /**
      * 考勤历史(默认返回今年的)
-     *
      * @return 返回一个历史数据list
      */
     @Override
@@ -205,10 +200,11 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = new String[1];
         selectionArgs[0] = String.valueOf(LocalDate.now().getYear());
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT distinct day,month FROM " + TABLE_NAME + " WHERE year=?", selectionArgs);
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT distinct day,month FROM " + TABLE_ATTENDANCE + " WHERE year=?", selectionArgs);
         ArrayList<History> historyArrayList = new ArrayList<>();
         while (cursor.isLast()) {
             History history = new History();
+            // todo history需要添加数据
             historyArrayList.add(history);
             cursor.moveToNext();
         }
@@ -228,25 +224,25 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     public List<StudentInfoTO> queryStudentInfo(String stuId, String name) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] selectionArgs = new String[4];
+        String[] selectionArgs = new String[2];
         selectionArgs[0] = String.valueOf(stuId);
         selectionArgs[1] = String.valueOf(name);
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE stu_id = ? and name= ?  ", selectionArgs);
+        // todo 模糊查询
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_ATTENDANCE + " WHERE stu_id = ? or name= ?  ", selectionArgs);
         ArrayList<StudentInfoTO> studentInfoTOS = new ArrayList<>();
-        while (cursor.isLast()) {
+        while (cursor.moveToNext()) {
             StudentInfoTO studentInfo = new StudentInfoTO();
             String datetime = cursor.getString(4);
-            studentInfo.setName(name);
-            studentInfo.setStuId(stuId);
+            studentInfo.setName(cursor.getString(1));
+            studentInfo.setStuId(cursor.getString(0));
             studentInfo.setDateTime(sdf.parse(datetime));
-            cursor.moveToNext();
+            studentInfoTOS.add(studentInfo);
         }
         return studentInfoTOS;
     }
 
     /**
      * 签到
-     *
      * @param stuId 学号
      * @param name  用户名
      * @param data  当前时间
@@ -257,14 +253,14 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     public Boolean signUp(String stuId, String name, LocalDateTime data) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("id", stuId);
+        cv.put("stu_id",stuId);
         cv.put("name", name);
         cv.put("is_Sign", Is_Sign.TURE.getCode());
         cv.put("day", data.getDayOfMonth());
         cv.put("month", data.getMonthValue());
         cv.put("year", data.getYear());
         cv.put("date", DateFormatUtils.getTodayDate());
-        return db.insert(TABLE_NAME, null, cv) == 1;
+        return db.insert(TABLE_ATTENDANCE, null, cv) == 1;
     }
 
     /**
@@ -276,14 +272,14 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
      */
     @Override
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Boolean isSignUp(int stuId, LocalDateTime data) {
+    public Boolean isSignUp(String stuId, LocalDateTime data) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = new String[4];
         selectionArgs[0] = String.valueOf(stuId);
         selectionArgs[1] = String.valueOf(LocalDateTime.now().getDayOfMonth());
         selectionArgs[2] = String.valueOf(LocalDate.now().getMonthValue());
         selectionArgs[3] = String.valueOf(LocalDate.now().getYear());
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE stu_id = ? and day= ? and month = ? and year = ? ", selectionArgs);
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_ATTENDANCE + " WHERE stu_id = ? and day= ? and month = ? and year = ? ", selectionArgs);
         return cursor.getCount() == 1;
     }
 

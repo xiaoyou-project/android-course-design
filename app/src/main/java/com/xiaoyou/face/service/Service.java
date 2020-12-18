@@ -32,6 +32,7 @@ public interface Service {
      * 首页签到部分,返回具体时间
      *
      * @return 返回已签到的日子
+     * @deprecated
      */
     List<LocalDate> getCalendar();
 
@@ -88,7 +89,7 @@ public interface Service {
      * @param data  当前时间
      * @return 是否签到
      */
-    Boolean isSignUp(int stuId, LocalDateTime data);
+    Boolean isSignUp(String stuId, LocalDateTime data);
 
 
 }
