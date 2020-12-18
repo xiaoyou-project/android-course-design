@@ -58,7 +58,7 @@ public class FunctionAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
 
-        // 吧view放到布局里面缓存
+        // 把view放到布局里面缓存
         if(convertView == null){
             //加载布局
             convertView =layoutInflater.inflate(R.layout.item_grid,null);

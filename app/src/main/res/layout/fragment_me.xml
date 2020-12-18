@@ -39,19 +39,25 @@
             android:id="@+id/edit_key"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
+            android:layout_weight="2"
             android:hint="@string/search_input"
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="15" />
-        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-            android:layout_gravity="center"
+
+        <Button
             android:id="@+id/search"
-            android:layout_marginStart="5dp"
-            style="@style/SuperButton.Blue.Icon"
-            android:drawableStart="@drawable/ic_search_white"
-            android:paddingStart="10dp"
-            android:width="20dp"
+            style="@style/Button.Style"
+            android:layout_marginStart="10dp"
+            android:layout_width="70dp"
+            android:background="@drawable/xui_config_bg_blue_btn"
+            android:layout_marginEnd="10dp"
             android:text="@string/search_search" />
     </LinearLayout>
+
+    <com.bin.david.form.core.SmartTable
+        android:id="@+id/table"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -38,6 +38,7 @@ import com.xiaoyou.face.service.RegisterInfo;
 import com.xiaoyou.face.service.SQLiteHelper;
 import com.xiaoyou.face.utils.ConfigUtil;
 import com.xiaoyou.face.utils.DrawHelper;
+import com.xiaoyou.face.utils.ToastUtils;
 import com.xiaoyou.face.utils.camera.CameraHelper;
 import com.xiaoyou.face.utils.camera.CameraListener;
 import com.xiaoyou.face.utils.face.FaceHelper;
@@ -89,6 +90,18 @@ import io.reactivex.schedulers.Schedulers;
 public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "RegisterAndRecognize";
     private static final int MAX_DETECT_NUM = 10;
+
+    /**
+     * 是否为人脸录入界面
+     */
+    private boolean REGISTER = true;
+
+    /**
+     * 用户是否注册
+     */
+    private boolean userRegister = true;
+
+
     /**
      * 当FR成功，活体未成功时，FR等待活体的时间
      */
@@ -218,13 +231,16 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
         // 这个recycle view用于显示人脸卡片信息
         RecyclerView recyclerShowFaceInfo = findViewById(R.id.single_camera_recycler_view_person);
-        // 这是绘制人脸识别框
-        faceRectView = findViewById(R.id.single_camera_face_rect_view);
         // 初始化比较结果数组
         compareResultList = new ArrayList<>();
+        // 如果不是录入界面，我们就显示录入信息
+
+        // 这是绘制人脸识别框
+        faceRectView = findViewById(R.id.single_camera_face_rect_view);
         //  这里我们给recyclew加上结果显示(这个用于显示识别结果)
         adapter = new FaceSearchResultAdapter(compareResultList, this);
         recyclerShowFaceInfo.setAdapter(adapter);
+
         // 这里是设置recycle view的一些效果
         DisplayMetrics dm = getResources().getDisplayMetrics();
         int spanCount = (int) (dm.widthPixels / (getResources().getDisplayMetrics().density * 100 + 0.5f));
@@ -239,6 +255,10 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         if (!intent.getBooleanExtra("login",true)){
             XUIAlphaImageView xuiAlphaImageView=findViewById(R.id.iv_take_photo);
             xuiAlphaImageView.setVisibility(View.INVISIBLE);
+            // 不是注册界面
+            REGISTER = false;
+        } else {
+            recyclerShowFaceInfo.setVisibility(View.INVISIBLE);
         }
 
         context = this;
@@ -589,6 +609,11 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      * 显示人脸录入弹窗
      */
     private void faceInput(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList){
+        if(userRegister){
+            ToastUtils.error("用户已注册，请勿重复注册");
+            registerStatus = REGISTER_STATUS_DONE;
+            return;
+        }
         int id = faceHelper.getTrackedFaceCount();
         //  显示录入弹窗
         Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
@@ -607,8 +632,6 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onNext(@NotNull Boolean success) {
-               String result = success ? "register success!" : "register failed!";
-               showToast(result);
                registerStatus = REGISTER_STATUS_DONE;
                if(success){
                    Message msg = handler.obtainMessage();
@@ -644,7 +667,6 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                     .customView(R.layout.dialog_input, true)
                     .title("人脸录入")
                     .positiveText(R.string.face_input)
-                    .negativeText(R.string.face_cancel)
                     .onPositive((dialog, which) -> {
                         // 点击录入的时的点击事件
                         MaterialEditText no = dialog.findViewById(R.id.input_no);
@@ -803,19 +825,28 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                                 //添加显示人员时，保存其trackId
                                 compareResult.setTrackId(requestId);
                                 compareResultList.add(compareResult);
-                                adapter.notifyItemInserted(compareResultList.size() - 1);
+                                if(!REGISTER){
+                                    adapter.notifyItemInserted(compareResultList.size() - 1);
+                                }
                             }
                             requestFeatureStatusMap.put(requestId, RequestFeatureStatus.SUCCEED);
-                            faceHelper.setName(requestId, getString(R.string.recognize_success_notice, compareResult.getId()));
-
+                            // 判断是否为用户录入界面
+                            if(REGISTER){
+                                faceHelper.setName(requestId, getString(R.string.recognize_have_notice, compareResult.getUserName()));
+                            }else{
+                                faceHelper.setName(requestId, getString(R.string.recognize_success_notice, compareResult.getUserName()));
+                            }
+                            userRegister = true;
                         } else {
                             faceHelper.setName(requestId, getString(R.string.recognize_failed_notice, "未注册"));
                             retryRecognizeDelayed(requestId);
+                            userRegister = false;
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        userRegister = false;
                         faceHelper.setName(requestId, getString(R.string.recognize_failed_notice, "未注册"));
                         retryRecognizeDelayed(requestId);
                     }
@@ -830,7 +861,6 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     /**
      * 将准备注册的状态置为{@link #REGISTER_STATUS_READY}
-     *
      * @param view 注册按钮
      */
     public void register(View view) {

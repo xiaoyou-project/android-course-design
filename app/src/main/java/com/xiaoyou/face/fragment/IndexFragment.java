@@ -21,6 +21,7 @@ import com.xiaoyou.face.activity.SignDetailActivity;
 import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.databinding.FragmentIndexBinding;
 import com.xiaoyou.face.model.Channel;
+import com.xiaoyou.face.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class IndexFragment extends Fragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
         View.OnClickListener{
+
+    /**
+     * 日历组件显示的时间map值
+     */
+    Map<String, Calendar> timeMap;
 
     private FragmentIndexBinding binding;
     TextView mTextMonthDay;
@@ -205,26 +211,35 @@ public class IndexFragment extends Fragment implements
         int year = mCalendarView.getCurYear();
         int month = mCalendarView.getCurMonth();
 
-        Map<String, Calendar> map = new HashMap<>();
-        map.put(getSchemeCalendar(year, month, 3, 0xFF40db25).toString(),
-                getSchemeCalendar(year, month, 3, 0xFF40db25));
-        map.put(getSchemeCalendar(year, month, 6, 0xFFe69138).toString(),
-                getSchemeCalendar(year, month, 6, 0xFFe69138));
-        map.put(getSchemeCalendar(year, month, 9, 0xFFdf1356).toString(),
-                getSchemeCalendar(year, month, 9, 0xFFdf1356));
-        map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d).toString(),
-                getSchemeCalendar(year, month, 13, 0xFFedc56d));
-        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d).toString(),
-                getSchemeCalendar(year, month, 14, 0xFFedc56d));
-        map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44).toString(),
-                getSchemeCalendar(year, month, 15, 0xFFaacc44));
-        map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0).toString(),
-                getSchemeCalendar(year, month, 18, 0xFFbc13f0));
-        map.put(getSchemeCalendar(year, month, 25, 0xFF13acf0).toString(),
-                getSchemeCalendar(year, month, 25, 0xFF13acf0));
-        map.put(getSchemeCalendar(year, month, 27, 0xFF13acf0).toString(),
-                getSchemeCalendar(year, month, 27, 0xFF13acf0));
+        timeMap = new HashMap<>();
+        addMark(year,month,1);
+        addMark(year,month,2);
+        addMark(year,month,3);
+        addMark(year,month,4);
+        addMark(year,month,5);
+        addMark(year,month,8);
+        addMark(year,month,9);
+        addMark(year,month,10);
+        addMark(year,month,11);
+        addMark(year,month,12);
+        addMark(year,month,13);
+        addMark(year,month,14);
+        addMark(year,month,15);
+        addMark(year,month,16);
+        addMark(year,month,17);
+        addMark(year,month,18);
+        addMark(year,month,19);
+        addMark(year,month,20);
+        addMark(year,month,21);
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
-        mCalendarView.setSchemeDate(map);
+        mCalendarView.setSchemeDate(timeMap);
+    }
+
+    /**
+     * 添加时间标记
+     */
+    private void addMark(int year, int month, int day){
+       timeMap.put(getSchemeCalendar(year, month, day, Tools.getRandomColor()).toString(),
+                getSchemeCalendar(year, month, day, Tools.getRandomColor()));
     }
 }
