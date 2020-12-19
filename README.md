@@ -1,9 +1,17 @@
 ## 注意事项
-
 1.首次启动程序会提示引擎激活失败，我们需要关闭应用重新启动,出现下面这个才能使用
-
 <img src="./image/1.jpg" style="zoom:30%;" />
 
+2.人脸识别需要注册登记，配置路径在：`\app\src\main\java\com\xiaoyou\face\common`
+
+修改下面这两个地方
+
+```java
+    public static final String APP_ID = "xxxxxx";
+    public static final String SDK_KEY = "xxxxx";
+```
+
+注册网址：[点击访问](https://www.arcsoft.com.cn/technology/face.html)
 
 
 ## 功能介绍
