@@ -21,10 +21,14 @@ import com.xiaoyou.face.activity.SignDetailActivity;
 import com.xiaoyou.face.adapter.FunctionAdapter;
 import com.xiaoyou.face.databinding.FragmentIndexBinding;
 import com.xiaoyou.face.model.Channel;
+import com.xiaoyou.face.service.DateHistoryTO;
+import com.xiaoyou.face.service.SQLiteHelper;
+import com.xiaoyou.face.service.Service;
 import com.xiaoyou.face.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -206,31 +210,15 @@ public class IndexFragment extends Fragment implements
      * 日历初始化
      */
     private void initData(){
-
-
-        int year = mCalendarView.getCurYear();
-        int month = mCalendarView.getCurMonth();
-
+//        int year = mCalendarView.getCurYear();
+//        int month = mCalendarView.getCurMonth();
+        Service service = new SQLiteHelper(getContext());
+        List<DateHistoryTO> calendar = service.getCalendar();
         timeMap = new HashMap<>();
-        addMark(year,month,1);
-        addMark(year,month,2);
-        addMark(year,month,3);
-        addMark(year,month,4);
-        addMark(year,month,5);
-        addMark(year,month,8);
-        addMark(year,month,9);
-        addMark(year,month,10);
-        addMark(year,month,11);
-        addMark(year,month,12);
-        addMark(year,month,13);
-        addMark(year,month,14);
-        addMark(year,month,15);
-        addMark(year,month,16);
-        addMark(year,month,17);
-        addMark(year,month,18);
-        addMark(year,month,19);
-        addMark(year,month,20);
-        addMark(year,month,21);
+        // 添加时间标记
+        for (DateHistoryTO history : calendar) {
+            addMark(history.getYear(),history.getMonth(),history.getDay());
+        }
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         mCalendarView.setSchemeDate(timeMap);
     }

@@ -32,9 +32,8 @@ public interface Service {
      * 首页签到部分,返回具体时间
      *
      * @return 返回已签到的日子
-     * @deprecated
      */
-    List<LocalDate> getCalendar();
+    List<DateHistoryTO> getCalendar();
 
 
     /**

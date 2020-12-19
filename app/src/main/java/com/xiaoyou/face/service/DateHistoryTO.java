@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DateHistoryTO {
+    private int year;
     private int day;
     private int month;
+    private int isSign;
+    private int unSign;
 }

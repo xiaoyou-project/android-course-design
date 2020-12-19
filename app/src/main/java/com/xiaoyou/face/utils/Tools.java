@@ -1,6 +1,9 @@
 package com.xiaoyou.face.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 
 import java.util.Random;
 
@@ -34,4 +37,18 @@ public class Tools {
         Random random = new Random();
         return Color.parseColor(colors[random.nextInt(colors.length)]);
     }
+
+
+    /**
+     * 获取系统的屏幕宽度
+     * @param context context对象
+     * @return 返回当前宽度(单位px)
+     */
+    public static int getWidth(Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        return dm.widthPixels;
+    }
+
+
 }

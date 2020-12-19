@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-@SmartTable(name="签到详情")
+@SmartTable()
 public class Login {
     @SmartColumn(id =1,name = "学号")
     String no;

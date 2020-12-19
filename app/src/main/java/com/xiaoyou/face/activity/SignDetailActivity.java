@@ -20,6 +20,7 @@ import com.xiaoyou.face.service.SQLiteHelper;
 import com.xiaoyou.face.service.Service;
 import com.xiaoyou.face.service.StudentInfo;
 import com.xiaoyou.face.service.StudentInfoTO;
+import com.xiaoyou.face.utils.Tools;
 import com.xuexiang.xui.XUI;
 
 import java.text.SimpleDateFormat;
@@ -65,18 +66,15 @@ public class SignDetailActivity extends AppCompatActivity {
         Service service = new SQLiteHelper(this);
         try {
             List<StudentInfoTO> histories =service.getCountToday();
-            Log.e("xiaoyou","结果大小"+histories.size());
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (StudentInfoTO history : histories) {
-                Log.e("xiaoyou",history.getName());
                 list.add(new Login(history.getStuId(),history.getName(),sdf.format(history.getDateTime())));
             }
         }catch (Exception e){
-            Log.e("xiaoyou",e.getMessage());
             return;
         }
-        // 设置缩放
-//        binding.table.setZoom(true);
+        // 表格样式(占满全屏)
+        binding.table.getConfig().setMinTableWidth(Tools.getWidth(this));
         // 显示数据
         binding.table.setData(list);
         // 统计行
@@ -94,16 +92,6 @@ public class SignDetailActivity extends AppCompatActivity {
         });
         // 隐藏顶部的序号列
         binding.table.getConfig().setShowXSequence(false);
-//                setContentBackgroundFormat(new BaseBackgroundFormat<CellInfo>() {
-//            @Override
-//            public int getBackGroundColor() {
-//                return ContextCompat.getColor(AnnotationModeActivity.this,R.color.content_bg);
-//            }
-//            @Override
-//            public boolean isDraw(CellInfo cellInfo) {
-//                return cellInfo.position%2 ==0;
-//            }
-//        });
 
     }
 

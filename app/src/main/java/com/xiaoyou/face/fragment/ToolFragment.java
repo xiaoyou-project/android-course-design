@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.xiaoyou.face.databinding.FragmentToolBinding;
+import com.xiaoyou.face.service.DateHistoryTO;
 import com.xiaoyou.face.service.History;
 import com.xiaoyou.face.service.SQLiteHelper;
 import com.xiaoyou.face.service.Service;
@@ -224,6 +225,18 @@ public class ToolFragment extends Fragment {
         binding.linearContainer.setVisibility(View.VISIBLE);
         //寻找到控件
         BarChart attendanceChart = binding.linearContainer;
+
+        // 图例顶部显示
+
+        //获取图例
+        Legend legend = attendanceChart.getLegend();
+        //设置图例水平显示
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        //顶部
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        //右对其
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+
         // 不显示描述
         attendanceChart.getDescription().setEnabled(false);
         //y轴右边关闭
@@ -237,13 +250,12 @@ public class ToolFragment extends Fragment {
         xAxis.setDrawGridLines(false);
         // 获取考勤历史
         Service service = new SQLiteHelper(getContext());
-        List<History> histories = service.getHistory();
-        Log.e("xiaoyou","历史数据长度"+histories.size());
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+        List<DateHistoryTO> histories = service.getHistory();
+
         // 设置x做显示
         ArrayList<String> data2 = new ArrayList<>();
-        for (History history : histories) {
-            data2.add(sdf.format(history.getDate()));
+        for (DateHistoryTO history : histories) {
+            data2.add(history.getMonth()+"-"+history.getDay());
         }
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -257,22 +269,11 @@ public class ToolFragment extends Fragment {
         //数据集1
         List<BarEntry> valsComp1 = new ArrayList<BarEntry>();
         for(int i=0; i< histories.size();i++){
-            valsComp1.add(new BarEntry(i,new float[] { histories.get(i).getIsSignUp(), histories.get(i).getNotSigUp()}));
+            valsComp1.add(new BarEntry(i,new float[] { histories.get(i).getIsSign(), histories.get(i).getUnSign()}));
         }
 
-//        XAxis xl = mChart.getXAxis();
-//        xl.setValueFormatter(new IAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, AxisBase axis) {
-//                return String.valueOf(data.get((int) value));
-//            }
-//            @Override
-//            public int getDecimalDigits() {
-//                return 0;
-//            }
-//        });
         //创建条形图对象
-        BarDataSet setComp1 = new BarDataSet(valsComp1, "历史考勤记录");
+        BarDataSet setComp1 = new BarDataSet(valsComp1, "");
         setComp1.setDrawIcons(false);
         setComp1.setColors(Color.parseColor("#67c23a"),Color.parseColor("#f56c6c"));
         setComp1.setStackLabels(new String[]{"已签到", "未签到"});

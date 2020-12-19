@@ -40,13 +40,6 @@ public class ExampleInstrumentedTest {
         Service service;
         service = new SQLiteHelper(appContext);
        service.signUp("1806040103","小游", LocalDateTime.now());
-       service.signUp("1806040104","小游1", LocalDateTime.now());
-       service.signUp("1806040105","小游2", LocalDateTime.now());
-       service.signUp("1806040106","小游3", LocalDateTime.now());
-       service.signUp("1806040107","小游4", LocalDateTime.now());
-       service.signUp("1806040108","小游5", LocalDateTime.now());
-
-
     }
 
     @Test
