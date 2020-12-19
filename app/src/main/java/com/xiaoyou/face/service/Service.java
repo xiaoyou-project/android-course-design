@@ -54,11 +54,11 @@ public interface Service {
 
 
     /**
-     * 考勤历史(默认返回今年的)
+     * 考勤历史(默认返回今年的) 用于日历
      *
      * @return 返回一个历史数据list
      */
-    List<History> getHistory();
+    List<DateHistoryTO> getHistory();
 
 
     /**

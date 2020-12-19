@@ -141,6 +141,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
 
     /**
      * 签到统计部分
+     *
      * @return 学号，姓名，签到时间
      */
     @Override
@@ -190,23 +191,25 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     }
 
     /**
-     * 考勤历史(默认返回今年的)
+     * 考勤历史(默认返回今年的),用于日历
+     *
      * @return 返回一个历史数据list
      */
     @Override
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public List<History> getHistory() {
+    public List<DateHistoryTO> getHistory() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = new String[1];
         selectionArgs[0] = String.valueOf(LocalDate.now().getYear());
         @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT distinct day,month FROM " + TABLE_ATTENDANCE + " WHERE year=?", selectionArgs);
-        ArrayList<History> historyArrayList = new ArrayList<>();
-        while (cursor.isLast()) {
-            History history = new History();
-            // todo history需要添加数据
+        List<DateHistoryTO> historyArrayList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            DateHistoryTO history = new DateHistoryTO();
+            // todo history需要添加数据 完成
+            history.setDay(cursor.getInt(0));
+            history.setMonth(cursor.getInt(1));
             historyArrayList.add(history);
-            cursor.moveToNext();
         }
         return historyArrayList;
     }
@@ -228,7 +231,8 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
         selectionArgs[0] = String.valueOf(stuId);
         selectionArgs[1] = String.valueOf(name);
         // todo 模糊查询
-        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_ATTENDANCE + " WHERE stu_id = ? or name= ?  ", selectionArgs);
+        String currentSqlSel = "SELECT * FROM " + TABLE_ATTENDANCE + " where stu_id like %" + stuId + " % or  name Like %" + name + " %";
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery(currentSqlSel, null);
         ArrayList<StudentInfoTO> studentInfoTOS = new ArrayList<>();
         while (cursor.moveToNext()) {
             StudentInfoTO studentInfo = new StudentInfoTO();
@@ -243,6 +247,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
 
     /**
      * 签到
+     *
      * @param stuId 学号
      * @param name  用户名
      * @param data  当前时间
@@ -253,7 +258,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements Service {
     public Boolean signUp(String stuId, String name, LocalDateTime data) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("stu_id",stuId);
+        cv.put("stu_id", stuId);
         cv.put("name", name);
         cv.put("is_Sign", Is_Sign.TURE.getCode());
         cv.put("day", data.getDayOfMonth());
