@@ -13,6 +13,12 @@
 
 注册网址：[点击访问](https://www.arcsoft.com.cn/technology/face.html)
 
+3.默认的SDK好像只有一年的有效期，所以需要进行替换
+
+第一个就是 `libs` 目录下的两个jar文件。
+然后就是 `app/src/main/jniLibs`目录下的so文件（包括face和image_util的）
+
+
 
 ## 功能介绍
 
